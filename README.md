@@ -8,7 +8,7 @@
 This repository contains the Infrastructure as Code (Terraform) and documentation for the 5 assigned AWS tasks.
 
 **Repository Structure:**
-![Repo Structure](./Screenshots/Screenshot%202025-12-04%20223727.png)
+![Repo Structure]
 
 * `Task_1/` - VPC & Networking setup
 * `Task_2/` - Static Website on EC2 (Nginx)
