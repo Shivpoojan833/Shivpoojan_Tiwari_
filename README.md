@@ -8,7 +8,7 @@
 This repository contains the Infrastructure as Code (Terraform) and documentation for the 5 assigned AWS tasks.
 
 **Repository Structure:**
-![Repo Structure](./screenshots/Screenshot%202025-12-04%20223727.png)
+![Repo Structure](./Screenshots/Screenshot%202025-12-04%20223727.png)
 
 * `Task_1/` - VPC & Networking setup
 * `Task_2/` - Static Website on EC2 (Nginx)
@@ -37,9 +37,9 @@ I followed "Least Privilege" for the Security Group, opening only Port 80 (HTTP)
 
 **Screenshots:**
 * **Terraform Output (Instance Creation):**
-  ![Terraform Output](./screenshots/Screenshot%202025-12-04%20205522.png)
+  ![Terraform Output](./Screenshots/Screenshot%202025-12-04%20205522.png)
 * **Live Website Proof:**
-  ![Resume Website](./screenshots/Screenshot%202025-12-04%20205430.png)
+  ![Resume Website](./Screenshots/Screenshot%202025-12-04%20205430.png)
 
 ---
 
@@ -53,13 +53,13 @@ To ensure high availability, I deployed resources across two Availability Zones 
 
 **Screenshots:**
 * **Load Balancer Configuration:**
-  ![ALB Details](./screenshots/Screenshot%202025-12-04%20211101.png)
+  ![ALB Details](./Screenshots/Screenshot%202025-12-04%20211101.png)
 * **Target Group Health (Healthy Hosts):**
-  ![Target Group](./screenshots/Screenshot%202025-12-04%20211046.png)
+  ![Target Group](./Screenshots/Screenshot%202025-12-04%20211046.png)
 * **Auto Scaling Group Capacity:**
-  ![ASG Status](./screenshots/Screenshot%202025-12-04%20211147.png)
+  ![ASG Status](./Screenshots/Screenshot%202025-12-04%20211147.png)
 * **High Availability App Proof (Served via Internal IP):**
-  ![App Proof](./screenshots/Screenshot%202025-12-04%20211533.png)
+  ![App Proof](./Screenshots/Screenshot%202025-12-04%20211533.png)
 
 ---
 
@@ -70,9 +70,9 @@ Since I am using the Free Tier, cost monitoring is my safety net. I configured a
 
 **Screenshots:**
 * **Billing Alarm Graph (>₹100):**
-  ![Billing Alarm](./screenshots/Screenshot%202025-12-04%20213256.png)
+  ![Billing Alarm](./Screenshots/Screenshot%202025-12-04%20213256.png)
 * **Free Tier Alerts Configured:**
-  ![Alert Preferences](./screenshots/Screenshot%202025-12-04%20213631.png)
+  ![Alert Preferences](./Screenshots/Screenshot%202025-12-04%20213631.png)
 
 ---
 
