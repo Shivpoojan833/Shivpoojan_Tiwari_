@@ -19,82 +19,74 @@ This repository contains the Infrastructure as Code (Terraform) and documentatio
 ## 🛠 Task 1: Networking & Subnetting
 
 ### My Approach
-For the network foundation, I decided to build a custom VPC from scratch rather than relying on the default one. I wanted a clean separation between the public layer (for the Load Balancer/NAT) and the private layer (for backend servers).
-
-I configured a **NAT Gateway** in the public subnet so that my private instances can still download updates from the internet without exposing themselves to inbound attacks.
-
-### IP Range Choices
-* **VPC (`10.0.0.0/16`):** I went with a standard `/16` block. It gives me over 65,000 IPs, which is more than enough for this project and leaves plenty of room if I needed to add more subnets later.
-* **Subnets (`10.0.1.0/24`, `10.0.2.0/24`...):** I used `/24` for the subnets because it’s the industry standard—it provides 256 IPs per subnet, which is easy to manage and calculate.
+For the network foundation, I built a custom VPC with a clean separation between the public layer (for the Load Balancer/NAT) and the private layer (for backend servers). I configured a **NAT Gateway** in the public subnet so private instances can download updates securely.
 
 **Screenshots:**
-* **VPC Dashboard:** ![VPC](./screenshots/task1_vpc.png)
-* **Subnet List:** ![Subnets](./screenshots/task1_subnets.png)
-* **Route Tables:** ![Route Tables](./screenshots/task1_routes.png)
-* **NAT & IGW:** ![NAT](./screenshots/task1_nat.png)
+* **VPC & Subnet Setup:**
+  *(Please ensure you add your Task 1 screenshot here if available)*
+  ![VPC Setup](./screenshots/task1_vpc_setup.png)
 
 ---
 
 ## 🚀 Task 2: EC2 Static Website Hosting
 
 ### How I Built It
-For this task, I needed a simple way to host my resume. I chose **Nginx** because it's lightweight and easy to configure.
-
-To automate the process, I wrote a `user_data` script in Terraform. This script runs as soon as the instance launches, updates the system, installs Nginx, and generates my HTML resume file. This means I didn't have to SSH into the server manually to set anything up—it just works out of the box.
+I hosted my resume using **Nginx** on a `t2.micro` instance. I used a Terraform `user_data` script to automate the installation and HTML generation, so the server is ready the moment it launches.
 
 ### Security Hardening
-I followed the "Least Privilege" principle for the Security Group:
-1.  **Port 80 (HTTP):** Open to the world so people can see the website.
-2.  **Port 22 (SSH):** Open for management.
-3.  **Everything else:** Blocked.
+I followed "Least Privilege" for the Security Group, opening only Port 80 (HTTP) and Port 22 (SSH).
 
 **Screenshots:**
-* **Running Instance:** ![EC2](./screenshots/task2_ec2.png)
-* **Security Group Rules:** ![Security Group](./screenshots/task2_sg.png)
-* **Live Website:** ![Website](./screenshots/task2_website.png)
+* **Instance Creation Output (Terraform):**
+  ![Instance](./screenshots/Screenshot%202025-12-04%20205522.png)
+* **Live Website Proof:**
+  ![Website](./screenshots/Screenshot%202025-12-04%20205430.png)
 
 ---
 
 ## ⚖️ Task 3: High Availability & Auto Scaling
 
 ### Architecture Logic
-Moving to a High Availability setup meant I had to ensure the app wouldn't crash if one server or zone failed. I deployed the infrastructure across two Availability Zones in the Sydney region.
-
+To ensure high availability, I deployed resources across two Availability Zones in the Sydney region.
 * **Traffic Flow:** Users hit the Application Load Balancer (ALB) first.
-* **Security:** I moved the EC2 instances into **Private Subnets**. This is a crucial security step—it means no one on the internet can directly ping the servers. The ALB handles the public traffic and forwards it internally.
-* **Scaling:** I attached an Auto Scaling Group (ASG) to keep the app resilient. If traffic spikes, it adds servers; if it drops, it removes them to save money.
+* **Security:** Backend EC2 instances run in **Private Subnets**, safe from direct internet access.
+* **Scaling:** An Auto Scaling Group (ASG) monitors load and maintains instance health.
 
 **Screenshots:**
-* **Load Balancer:** ![ALB](./screenshots/task3_alb.png)
-* **Target Group Status:** ![Target Group](./screenshots/task3_tg.png)
-* **Auto Scaling Group:** ![ASG](./screenshots/task3_asg.png)
-* **Private Instances:** ![Instances](./screenshots/task3_instances.png)
+* **Load Balancer Config:**
+  ![ALB](./screenshots/Screenshot%202025-12-04%20211101.png)
+* **Target Group Health:**
+  ![Target Group](./screenshots/Screenshot%202025-12-04%20211046.png)
+* **Auto Scaling Group Status:**
+  ![ASG](./screenshots/Screenshot%202025-12-04%20211147.png)
+* **High Availability App Proof:**
+  ![App Served via ASG](./screenshots/Screenshot%202025-12-04%20211533.png)
 
 ---
 
 ## 💰 Task 4: Billing & Cost Monitoring
 
 ### Why This Matters
-Since I am using my personal AWS Free Tier account, cost monitoring was actually the first thing I thought about. It's easy to accidentally leave a NAT Gateway or a large EC2 instance running, which can rack up a huge bill overnight.
-
-I set up a CloudWatch alarm to trigger if my estimated charges go over ₹100. This acts as a safety net so I can react immediately if I forget to delete a resource.
+Since I am using the Free Tier, cost monitoring is my safety net. I configured a CloudWatch alarm to trigger if charges exceed ₹100, preventing accidental bills from zombie resources like unattached EBS volumes.
 
 **Screenshots:**
-* **Billing Alarm:** ![Alarm](./screenshots/task4_alarm.png)
-* **Free Tier Alerts:** ![Free Tier](./screenshots/task4_freetier.png)
+* **Billing Alarm (>₹100):**
+  ![Alarm](./screenshots/Screenshot%202025-12-04%20213256.png)
+* **Free Tier Alerts Configured:**
+  ![Free Tier](./screenshots/Screenshot%202025-12-04%20213631.png)
 
 ---
 
 ## 📐 Task 5: Architecture Diagram (10k Users)
 
 ### Design Strategy
-To support 10,000 concurrent users, a single server wouldn't survive. I designed a **3-Tier Architecture** focused on redundancy and caching:
-
-1.  **Frontend:** I placed AWS WAF (Web Application Firewall) at the edge to block malicious traffic before it even hits our network.
-2.  **Caching:** I added **ElastiCache (Redis)**. By caching frequently accessed data (like user sessions), we reduce the load on the main database significantly.
-3.  **Database:** I chose **Amazon Aurora** with a Multi-AZ standby. If the primary database fails, the standby takes over automatically without data loss.
+I designed a **3-Tier Architecture** to support 10,000 users:
+1.  **Frontend:** AWS WAF + ALB for secure traffic distribution.
+2.  **App Layer:** Auto Scaling Group for handling traffic spikes.
+3.  **Data Layer:** ElastiCache (Redis) to offload database reads and Aurora Multi-AZ for database redundancy.
 
 ### Architecture Diagram
-![Architecture Diagram](./screenshots/task5_diagram.png)
+*(Please ensure you add your Diagram screenshot here)*
+![Architecture Diagram](./screenshots/task5_architecture.png)
 
 ---
