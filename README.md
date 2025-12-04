@@ -5,9 +5,11 @@
 ---
 
 ## 📂 Project Overview
-This repository contains the Infrastructure as Code (Terraform) and documentation for the 5 assigned AWS tasks. I have organized the code into separate folders for clarity.
+This repository contains the Infrastructure as Code (Terraform) and documentation for the 5 assigned AWS tasks.
 
 **Repository Structure:**
+![Repo Structure](./screenshots/Screenshot%202025-12-04%20223727.png)
+
 * `Task_1/` - VPC & Networking setup
 * `Task_2/` - Static Website on EC2 (Nginx)
 * `Task_3/` - Load Balancer & Auto Scaling (High Availability)
@@ -19,12 +21,9 @@ This repository contains the Infrastructure as Code (Terraform) and documentatio
 ## 🛠 Task 1: Networking & Subnetting
 
 ### My Approach
-For the network foundation, I built a custom VPC with a clean separation between the public layer (for the Load Balancer/NAT) and the private layer (for backend servers). I configured a **NAT Gateway** in the public subnet so private instances can download updates securely.
+For the network foundation, I built a custom VPC with a clean separation between the public layer (for the Load Balancer/NAT) and the private layer (for backend servers). I configured a **NAT Gateway** in the public subnet so private instances can download updates securely without being exposed to the public internet.
 
-**Screenshots:**
-* **VPC & Subnet Setup:**
-  *(Please ensure you add your Task 1 screenshot here if available)*
-  ![VPC Setup](./screenshots/task1_vpc_setup.png)
+*(Note: Terraform code for the VPC setup is included in the `Task_1` folder)*
 
 ---
 
@@ -37,10 +36,10 @@ I hosted my resume using **Nginx** on a `t2.micro` instance. I used a Terraform 
 I followed "Least Privilege" for the Security Group, opening only Port 80 (HTTP) and Port 22 (SSH).
 
 **Screenshots:**
-* **Instance Creation Output (Terraform):**
-  ![Instance](./screenshots/Screenshot%202025-12-04%20205522.png)
+* **Terraform Output (Instance Creation):**
+  ![Terraform Output](./screenshots/Screenshot%202025-12-04%20205522.png)
 * **Live Website Proof:**
-  ![Website](./screenshots/Screenshot%202025-12-04%20205430.png)
+  ![Resume Website](./screenshots/Screenshot%202025-12-04%20205430.png)
 
 ---
 
@@ -53,14 +52,14 @@ To ensure high availability, I deployed resources across two Availability Zones 
 * **Scaling:** An Auto Scaling Group (ASG) monitors load and maintains instance health.
 
 **Screenshots:**
-* **Load Balancer Config:**
-  ![ALB](./screenshots/Screenshot%202025-12-04%20211101.png)
-* **Target Group Health:**
+* **Load Balancer Configuration:**
+  ![ALB Details](./screenshots/Screenshot%202025-12-04%20211101.png)
+* **Target Group Health (Healthy Hosts):**
   ![Target Group](./screenshots/Screenshot%202025-12-04%20211046.png)
-* **Auto Scaling Group Status:**
-  ![ASG](./screenshots/Screenshot%202025-12-04%20211147.png)
-* **High Availability App Proof:**
-  ![App Served via ASG](./screenshots/Screenshot%202025-12-04%20211533.png)
+* **Auto Scaling Group Capacity:**
+  ![ASG Status](./screenshots/Screenshot%202025-12-04%20211147.png)
+* **High Availability App Proof (Served via Internal IP):**
+  ![App Proof](./screenshots/Screenshot%202025-12-04%20211533.png)
 
 ---
 
@@ -70,10 +69,10 @@ To ensure high availability, I deployed resources across two Availability Zones 
 Since I am using the Free Tier, cost monitoring is my safety net. I configured a CloudWatch alarm to trigger if charges exceed ₹100, preventing accidental bills from zombie resources like unattached EBS volumes.
 
 **Screenshots:**
-* **Billing Alarm (>₹100):**
-  ![Alarm](./screenshots/Screenshot%202025-12-04%20213256.png)
+* **Billing Alarm Graph (>₹100):**
+  ![Billing Alarm](./screenshots/Screenshot%202025-12-04%20213256.png)
 * **Free Tier Alerts Configured:**
-  ![Free Tier](./screenshots/Screenshot%202025-12-04%20213631.png)
+  ![Alert Preferences](./screenshots/Screenshot%202025-12-04%20213631.png)
 
 ---
 
@@ -85,8 +84,6 @@ I designed a **3-Tier Architecture** to support 10,000 users:
 2.  **App Layer:** Auto Scaling Group for handling traffic spikes.
 3.  **Data Layer:** ElastiCache (Redis) to offload database reads and Aurora Multi-AZ for database redundancy.
 
-### Architecture Diagram
-*(Please ensure you add your Diagram screenshot here)*
-![Architecture Diagram](./screenshots/task5_architecture.png)
+*(Note: Architecture diagram source file/image can be found in the `Task_5` folder)*
 
 ---
